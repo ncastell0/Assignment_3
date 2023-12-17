@@ -1,0 +1,137 @@
+---
+title: "naiara_castello_a3"
+author: "Naiara Castello"
+date: "2023-12-17"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(ggcorrplot)
+library(car)
+library(psych)
+library(ggthemes)
+share_data <- read.csv("share_selected.csv")
+```
+
+# Explore relationships
+## Numeric
+
+```{r}
+correlations <- share_data |>
+  select(where(is.numeric)) |>
+  cor(use = "pairwise.complete.obs")
+
+share_data |>
+  select(where(is.numeric)) |>
+  cor(use = "pairwise.complete.obs") |>
+  ggcorrplot()
+
+na_counts <- colSums(is.na(share_data))
+na_counts
+
+```
+
+##Categorical
+
+```{r}
+ggplot(share_data, aes(x = sex, y = household_income)) +
+  geom_boxplot()
+
+ggplot(share_data, aes(x = household_income, color = sex, fill = sex)) +
+  geom_density(alpha = 0.5) +
+  labs(
+    title = "Household Income and Sex",
+    x = "Household income (SEK/Month)", y = "Density",
+    )
+
+ggplot(share_data, aes(x = household_income, color = lives_with_partner, fill = lives_with_partner)) +
+  geom_density(alpha = 0.5) +
+  labs(
+    title = "Household Income and Living with Partner",
+    x = "Household income (SEK/Month)", y = "Density")
+
+ggplot(share_data, aes(x = household_income, color = retired, fill = retired)) +
+  geom_density(alpha = 0.5) +
+  labs(
+    title = "Household Income and Retirement",
+    x = "Household income (SEK/Month)", y = "Density")
+
+ggplot(share_data, aes(x = household_income, color = books_age_10, fill = books_age_10)) +
+  geom_density(alpha = 0.5) +
+  labs(
+    title = "Household Income and Books at Age 10",
+    x = "Household income (SEK/Month)", y = "Density")
+
+ggplot(share_data, aes(x = household_income, color = relative_math_ability_at_age_10, fill = relative_math_ability_at_age_10)) +
+  geom_density(alpha = 0.5) +
+  labs(
+      title = "Household Income and Math Ability at Age 10",
+    x = "Household income (SEK/Month)", y = "Density")
+
+ggplot(share_data, aes(x = household_income, color = relative_language_ability_at_age_10, fill = relative_language_ability_at_age_10)) +
+  geom_density(alpha = 0.5) +
+  labs(
+      title = "Household Income and Language Ability at Age 10",
+    x = "Household income (SEK/Month)", y = "Density")
+
+ggplot(share_data, aes(x = n_household, color = lives_with_partner, fill = lives_with_partner)) +
+  geom_density(alpha = 0.5) +
+  labs(
+    title = "Number of People in the Household and Living with Partner",
+    x = "Number of People in the Household", y = "Density")
+
+```
+
+```{r}
+share_data <- share_data |> select(- lives_with_partner)
+```
+
+
+# Build a regression model using backward selection
+## All predictors included
+```{r}
+model_all <- share_data |>
+  lm(formula = household_income ~ .)
+summary(model_all)
+vif(model_all)
+
+### Select model
+model_allminus2 <- share_data |>
+  lm(formula = household_income ~ . - years_of_education)
+summary(model_allminus2)
+
+model_allminus3 <- share_data |>
+  lm(formula = household_income ~ . - years_of_education - sex)
+summary(model_allminus3)
+
+model_allminus4 <- share_data |>
+  lm(formula = household_income ~ . -years_of_education -sex -retired)
+summary(model_allminus4)
+
+model_allminus5 <- share_data |>
+  lm(formula = household_income ~ . -years_of_education -sex -retired -age)
+summary(model_allminus5)
+
+model_allminus6 <- share_data |>
+  lm(formula = household_income ~ . -years_of_education -sex -retired -age -relative_math_ability_at_age_10)
+summary(model_allminus6)
+
+model_allminus7 <- share_data |>
+  lm(formula = household_income ~ . -years_of_education -sex -retired -age -relative_math_ability_at_age_10 -age_partner)
+summary(model_allminus7)
+
+model_final <- share_data |>
+  lm(formula = household_income ~ n_household + books_age_10 + relative_language_ability_at_age_10)
+summary(model_final)
+vif(model_final)
+
+## Residual standard error: 17670 on 416 degrees of freedom Multiple R-squared:  0.2328,	Adjusted R-squared:  0.2273  F-statistic: 42.07 on 3 and 416 DF,  p-value: < 2.2e-16
+```
+
+
+
+
+lm(formula = household_income ~ )
