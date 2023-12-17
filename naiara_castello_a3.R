@@ -21,7 +21,6 @@ share_data |>
 na_counts <- colSums(is.na(share_data))
 na_counts
 
-
 ##Categorical
 ggplot(share_data, aes(x = sex, y = household_income)) +
   geom_boxplot()
@@ -77,7 +76,7 @@ model_all <- share_data |>
 summary(model_all)
 vif(model_all)
 
-### Select model
+## Select model
 model_allminus1 <- share_data |>
   lm(formula = household_income ~ . - age)
 summary(model_allminus1)
@@ -101,8 +100,7 @@ summary(model_final)
 vif_values <- vif(model_final)
 vif_data <- data.frame(
   variable = names(vif_values),
-  vif = vif_values
-)
+  vif = vif_values)
 
 ggplot(vif_data, aes(x = variable, y = vif)) +
   geom_bar(stat = "identity", fill = "steelblue") +
@@ -111,5 +109,4 @@ ggplot(vif_data, aes(x = variable, y = vif)) +
   labs(
     title = "Variance Inflation Factor (VIF)",
     x = "Predictor Variables",
-    y = "VIF Values"
-  )
+    y = "VIF Values")
