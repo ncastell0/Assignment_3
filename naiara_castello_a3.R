@@ -37,6 +37,12 @@ ggplot(share_data, aes(x = household_income, color = lives_with_partner, fill = 
     title = "Household Income and Living with Partner",
     x = "Household income (SEK/Month)", y = "Density")
 
+ggplot(
+  data = share_data,
+  mapping = aes(x = n_household, y = household_income)) +
+  geom_point(mapping = aes(color = lives_with_partner)) +
+  geom_smooth(method = "lm")
+
 ggplot(share_data, aes(x = household_income, color = retired, fill = retired)) +
   geom_density(alpha = 0.5) +
   labs(
