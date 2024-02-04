@@ -5,9 +5,26 @@ library(ggcorrplot)
 library(car)
 library(psych)
 library(ggthemes)
+library(summarytools)
+library(apaTables)
 share_data <- read.csv("share_selected.csv")
 
 # Explore relationships
+summary(share_data)
+
+freq(share_data$sex,
+     report.nas = TRUE)
+
+freq(share_data$lives_with_partner,
+     report.nas = TRUE)
+
+freq(share_data$retired,
+     report.nas = TRUE)
+
+freq(share_data$books_age_10,
+     report.nas = TRUE)
+
+
 ## Numeric
 correlations <- share_data |>
   select(where(is.numeric)) |>
@@ -17,6 +34,14 @@ share_data |>
   select(where(is.numeric)) |>
   cor(use = "pairwise.complete.obs") |>
   ggcorrplot()
+
+apa.cor.table(
+  share_data,
+  filename = "corr_table",
+  show.conf.interval = TRUE,
+  show.sig.stars = TRUE,
+  landscape = TRUE
+)
 
 na_counts <- colSums(is.na(share_data))
 na_counts
@@ -36,12 +61,6 @@ ggplot(share_data, aes(x = household_income, color = lives_with_partner, fill = 
   labs(
     title = "Household Income and Living with Partner",
     x = "Household income (SEK/Month)", y = "Density")
-
-ggplot(
-  data = share_data,
-  mapping = aes(x = n_household, y = household_income)) +
-  geom_point(mapping = aes(color = lives_with_partner)) +
-  geom_smooth(method = "lm")
 
 ggplot(share_data, aes(x = household_income, color = retired, fill = retired)) +
   geom_density(alpha = 0.5) +
@@ -72,6 +91,18 @@ ggplot(share_data, aes(x = n_household, color = lives_with_partner, fill = lives
   labs(
     title = "Number of People in the Household and Living with Partner",
     x = "Number of People in the Household", y = "Density")
+
+ggplot(
+  data = share_data, 
+  mapping = aes(x = n_household, y = household_income)) +
+  geom_point(mapping = aes(color = lives_with_partner)) +
+  geom_smooth(method = "lm")
+
+ggplot(
+  data = share_data, 
+  mapping = aes(x = age, y = household_income)) +
+  geom_point(mapping = aes(color = retired)) +
+  geom_smooth(method = "lm")
 
 share_data <- share_data |> select( - lives_with_partner, - age_partner)
 

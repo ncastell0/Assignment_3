@@ -1,26 +1,26 @@
 {
-    "id": "DF1885AF",
+    "id": "462FFDDA",
     "path": "~/GitHub/Assignment_3/naiara_castello_a3.R",
     "project_path": "naiara_castello_a3.R",
     "type": "r_source",
-    "hash": "3379736452",
+    "hash": "3778173654",
     "contents": "",
-    "dirty": true,
-    "created": 1702848878672.0,
+    "dirty": false,
+    "created": 1704447579482.0,
     "source_on_save": false,
     "relative_order": 1,
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "112,0",
-        "scrollLine": "101"
+        "cursorPosition": "0,0",
+        "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1702848567,
+    "lastKnownWriteTime": 1703150366,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1702849129334,
+    "last_content_update": 1703150366,
     "read_only": false,
     "read_only_alternatives": []
 }
