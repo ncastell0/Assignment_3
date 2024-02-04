@@ -142,7 +142,7 @@ vif_data <- data.frame(
 ggplot(vif_data, aes(x = variable, y = vif)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   theme_minimal() +
-  geom_hline(yintercept = 1.25, linetype = "dashed", color = "red") +
+  geom_hline(yintercept = 1.00, linetype = "dashed", color = "red") +
   labs(
     title = "Variance Inflation Factor (VIF)",
     x = "Predictor Variables",
