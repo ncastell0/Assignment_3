@@ -8,6 +8,8 @@ library(psych)
 library(ggthemes)
 library(summarytools)
 library(apaTables)
+library(wesanderson)
+library(ggsci)
 
 share_data <- read.csv("share_selected.csv")
 
@@ -35,11 +37,10 @@ correlations <- share_data |>
 corr_plot <- share_data |>
   select(where(is.numeric)) |>
   cor(use = "pairwise.complete.obs") |>
-  ggcorrplot() +
+  ggcorrplot(hc.order = TRUE, type = "lower", outline.color = "white") +
   xlab(NULL) +
   ylab(NULL)
-
-ggsave(corr_plot, file = "corr_plot.png", width = 5, height = 3, units = "in", dpi = 300)
+ggsave(corr_plot, file = "corr_plot.png", width = 10, height = 7, units = "in", dpi = 300)
 
 
 apa.cor.table(
@@ -64,59 +65,88 @@ ggplot(share_data, aes(x = household_income, color = sex, fill = sex)) +
     x = "Household income (SEK/Month)", y = "Density")
 
 hhi_part <- ggplot(share_data, aes(x = household_income, color = lives_with_partner, fill = lives_with_partner)) +
-  geom_density(alpha = 0.5) +
+  geom_density(alpha = 0.7) +
+  scale_color_manual(values = wes_palette("BottleRocket2")) +
+  scale_fill_manual(values = wes_palette("BottleRocket2")) +
+  theme_minimal() +
   labs(
     title = "Household Income and Living with Partner",
     x = "Household income (SEK/Month)", y = "Density")
 ggsave(hhi_part, file = "hhi_part.png", width = 10, height = 5, units = "in", dpi = 300)
 
 hhi_ret <- ggplot(share_data, aes(x = household_income, color = retired, fill = retired)) +
-  geom_density(alpha = 0.5) +
+  geom_density(alpha = 0.7) +
+  scale_color_manual(values = wes_palette("Royal1")) +
+  scale_fill_manual(values = wes_palette("Royal1")) +
+  theme_minimal()+
   labs(
     title = "Household Income and Retirement",
     x = "Household income (SEK/Month)", y = "Density")
 ggsave(hhi_ret, file = "hhi_ret.png", width = 10, height = 5, units = "in", dpi = 300)
 
 hhi_books <- ggplot(share_data, aes(x = household_income, color = books_age_10, fill = books_age_10)) +
-  geom_density(alpha = 0.5) +
+  geom_density(alpha = 0.7) +
+  scale_color_manual(values = wes_palette("FantasticFox1")) +
+  scale_fill_manual(values = wes_palette("FantasticFox1")) +
+  theme_minimal()+
   labs(
     title = "Household Income and Books at Age 10",
     x = "Household income (SEK/Month)", y = "Density")
 ggsave(hhi_books, file = "hhi_books.png", width = 10, height = 5, units = "in", dpi = 300)
 
 hhi_math <- ggplot(share_data, aes(x = household_income, color = relative_math_ability_at_age_10, fill = relative_math_ability_at_age_10)) +
-  geom_density(alpha = 0.5) +
+  geom_density(alpha = 0.7) +
+  scale_color_manual(values = wes_palette("Moonrise2")) +
+  scale_fill_manual(values = wes_palette("Moonrise2")) +
+  theme_minimal() +
   labs(
     title = "Household Income and Math Ability at Age 10",
     x = "Household income (SEK/Month)", y = "Density")
+hhi_math
 ggsave(hhi_math, file = "hhi_math.png", width = 10, height = 5, units = "in", dpi = 300)
 
+
 hhi_lang <- ggplot(share_data, aes(x = household_income, color = relative_language_ability_at_age_10, fill = relative_language_ability_at_age_10)) +
-  geom_density(alpha = 0.5) +
+  geom_density(alpha = 0.7) +
+  scale_color_manual(values = wes_palette("Darjeeling1")) +
+  scale_fill_manual(values = wes_palette("Darjeeling1")) +
+  theme_minimal() +
   labs(
     title = "Household Income and Language Ability at Age 10",
     x = "Household income (SEK/Month)", y = "Density")
+hhi_lang
 ggsave(hhi_lang, file = "hhi_lang.png", width = 10, height = 5, units = "in", dpi = 300)
+
 
 ggplot(share_data, aes(x = n_household, color = lives_with_partner, fill = lives_with_partner)) +
   geom_density(alpha = 0.5) +
+  scale_color_manual(values = wes_palette("Darjeeling1")) +
+  scale_fill_manual(values = wes_palette("Darjeeling1")) +
+  theme_minimal() +
   labs(
     title = "Number of People in the Household and Living with Partner",
     x = "Number of People in the Household", y = "Density")
 
-hhi_nhous_part <- ggplot(
-  data = share_data, 
-  mapping = aes(x = n_household, y = household_income)) +
-  geom_point(mapping = aes(color = lives_with_partner)) +
-  geom_smooth(method = "lm")
-ggsave(hhi_nhous_part, file = "hhi_nhous_part.png", width = 7, height = 3, units = "in", dpi = 300)
+cav1_colors <- wes_palette("Cavalcanti1", type = "continuous")
 
 hhi_age_ret <- ggplot(
   data = share_data, 
   mapping = aes(x = age, y = household_income)) +
   geom_point(mapping = aes(color = retired)) +
-  geom_smooth(method = "lm")
-ggsave(hhi_age_ret, file = "hhi_age__ret.png", width = 7, height = 3, units = "in", dpi = 300)
+  geom_smooth(method = "lm", color = cav1_colors[5], se = FALSE) + 
+  scale_color_manual(values = wes_palette("Cavalcanti1")) +
+  scale_fill_manual(values = wes_palette("Cavalcanti1")) +
+  theme_minimal()
+ggsave(hhi_age_ret, file = "hhi_age_ret.png", width = 7, height = 3, units = "in", dpi = 300)
+
+hhi_nhous_part <- ggplot(
+  data = share_data,
+  mapping = aes(x = n_household, y = household_income, fill = lives_with_partner)) +   geom_bar(stat = 'identity') +
+  scale_fill_manual(values = wes_palette("Cavalcanti1", 2, type = "discrete")) +
+  scale_color_manual(values = wes_palette("Cavalcanti1", 2, type = "discrete")) +
+  theme_minimal()
+ggsave(hhi_nhous_part, file = "hhi_nhous_part.png", width = 7, height = 3, units = "in", dpi = 300)
+
 
 share_data <- share_data |> select( - lives_with_partner, - age_partner)
 
@@ -153,10 +183,10 @@ vif_data <- data.frame(
   variable = names(vif_values),
   vif = vif_values)
 
-vif_plot <- ggplot(vif_data, aes(x = variable, y = vif)) +
-  geom_bar(stat = "identity", fill = "steelblue") +
+vif_plot <- ggplot(vif_data, aes(x = variable, y = vif, fill = vif)) +
+  geom_bar(stat = "identity", color = cav1_colors[4]) +
   theme_minimal() +
-  geom_hline(yintercept = 1.00, linetype = "dashed", color = "red") +
+  geom_hline(yintercept = 1.00, linetype = "dashed", color = cav1_colors[5]) +
   labs(
     title = "Variance Inflation Factor (VIF)",
     x = "Predictor Variables",
